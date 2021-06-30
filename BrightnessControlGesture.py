@@ -1,11 +1,11 @@
+#This is a python project to control brightness using gesture control
+
 import cv2
 import numpy as np
 import time
 import handtrackingmodule as htm
 import math
-from ctypes import cast, POINTER
-from comtypes import CLSCTX_ALL
-from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import screen_brightness_control as sbc
 
 #Video left at 3:10:07
 
@@ -20,18 +20,6 @@ pTime=0
 cTime=0
 
 detector = htm.handDetector(detectionCon=0.7)
-
-
-devices = AudioUtilities.GetSpeakers()
-interface = devices.Activate(
-    IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-volume = cast(interface, POINTER(IAudioEndpointVolume))
-#volume.GetMute()
-#volume.GetMasterVolumeLevel()
-volRange = volume.GetVolumeRange()
-volume.SetMasterVolumeLevel(0, None)
-minVol = volRange[0]
-maxVol = volRange[1]
 
 
 while True:
@@ -52,9 +40,9 @@ while True:
 
         length = math.hypot(x2-x1,y2-y1)
 
-        vol = np.interp(length,[30,250],[minVol,maxVol])
-        print(int(length),vol)
-        volume.SetMasterVolumeLevel(vol,None)
+        brightness = np.interp(length,[30,250],[0,100])
+        print(int(length),brightness)
+        sbc.set_brightness(int(brightness))
 
         if length<30:
             cv2.circle(img, (cx, cy), 15, (0, 255, 0), cv2.FILLED)
