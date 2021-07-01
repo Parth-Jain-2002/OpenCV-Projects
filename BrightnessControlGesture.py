@@ -10,7 +10,7 @@ import screen_brightness_control as sbc
 #Video left at 3:10:07
 
 ############################
-wCam,hCam=640,480
+wCam,hCam=1200,1200
 ############################
 
 cap = cv2.VideoCapture(0)
